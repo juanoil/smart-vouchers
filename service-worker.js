@@ -1,9 +1,10 @@
-const CACHE_NAME = 'vouchers-cache-v3';
+const CACHE_NAME = 'vouchers-cache-v4';
 
-// القائمة بالملفات التي سيتم حفظها
+// القائمة بالملفات التي سيتم حفظها لتعمل بدون إنترنت (تمت إضافة print.html)
 const urlsToCache = [
   './',
   './index.html',
+  './print.html',
   './jwan-logo.png',
   './rehab-logo.jpg'
 ];
@@ -15,7 +16,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// مسح النسخ القديمة من ذاكرة الجوال
+// مسح النسخ القديمة من ذاكرة الجوال عند تحديث الإصدار
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
