@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vouchers-cache-v2';
+const CACHE_NAME = 'vouchers-cache-v3';
 
 // القائمة بالملفات التي سيتم حفظها
 const urlsToCache = [
