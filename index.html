@@ -2,12 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نظام السندات الذكي</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#E30613">
-
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="سندات">
@@ -36,12 +36,11 @@
     </script>
     <style>
         :root {
-            /* الألوان الافتراضية */
             --color-primary: #E30613; 
             --color-secondary: #000000;
         }
 
-        /* إعدادات الطباعة */
+        /* إعدادات الطباعة الدقيقة للحفاظ على حجم A4 */
         @media print {
             @page {
                 size: A4 portrait;
@@ -88,9 +87,6 @@
                 border: none !important;
                 background: transparent !important;
             }
-            .signature-pad {
-                display: block !important;
-            }
             input[type="date"]::-webkit-calendar-picker-indicator {
                 display: none !important;
             }
@@ -108,186 +104,180 @@
         .dotted-line:focus-within {
             border-bottom-color: var(--color-primary);
         }
-
-        .a4-screen-size {
-            width: 210mm;
-            min-height: 297mm;
-        }
     </style>
 </head>
-<body class="bg-gray-200 min-h-screen p-4 md:p-8 font-sans flex flex-col items-center">
+<body class="bg-gray-100 min-h-screen p-2 sm:p-4 md:p-8 font-sans flex flex-col items-center">
 
-    <div class="no-print w-full max-w-[210mm] mb-6 bg-white rounded-xl shadow-md p-4 flex flex-col md:flex-row flex-wrap gap-4 items-center justify-between border-t-4 border-brand-primary transition-colors duration-300">
+    <div class="no-print w-full max-w-4xl mb-6 bg-white rounded-xl shadow-md p-4 flex flex-col md:flex-row gap-4 items-center justify-between border-t-4 border-brand-primary transition-colors duration-300">
         
         <div class="flex items-center gap-2 bg-gray-100 p-1 rounded-lg border border-gray-200 w-full md:w-auto justify-center">
-            <button onclick="switchCompany('jwan')" id="btn-comp-jwan" class="px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800">شركة جوان الغربية</button>
-            <button onclick="switchCompany('rehab')" id="btn-comp-rehab" class="px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200">شركة رحاب الخيرات</button>
+            <button onclick="switchCompany('jwan')" id="btn-comp-jwan" class="flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800">شركة جوان</button>
+            <button onclick="switchCompany('rehab')" id="btn-comp-rehab" class="flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200">شركة رحاب</button>
         </div>
 
-        <div class="flex items-center gap-4 w-full md:w-auto justify-center">
-            <div class="flex bg-gray-100 rounded-lg p-1">
-                <button onclick="setVoucherType('receipt')" id="btn-receipt" class="px-4 py-2 rounded-md font-bold transition-all bg-brand-primary text-white shadow">سند قبض</button>
-                <button onclick="setVoucherType('payment')" id="btn-payment" class="px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200">سند صرف</button>
+        <div class="flex items-center gap-2 w-full md:w-auto justify-center">
+            <div class="flex bg-gray-100 rounded-lg p-1 w-full md:w-auto">
+                <button onclick="setVoucherType('receipt')" id="btn-receipt" class="flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all bg-brand-primary text-white shadow">سند قبض</button>
+                <button onclick="setVoucherType('payment')" id="btn-payment" class="flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200">سند صرف</button>
             </div>
         </div>
 
-        <div class="flex gap-2 w-full md:w-auto justify-center">
-            <button onclick="clearForm()" class="flex items-center gap-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm">
+        <div class="flex gap-2 w-full md:w-auto justify-center flex-wrap">
+            <button onclick="clearForm()" class="flex items-center justify-center gap-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm flex-1 md:flex-none">
                 <i data-lucide="trash-2" class="w-4 h-4"></i> تفريغ
             </button>
-            <button onclick="shareWhatsApp()" class="flex items-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors shadow-lg text-sm">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                واتساب
+            <button onclick="shareWhatsApp()" class="flex items-center justify-center gap-1 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors shadow-md text-sm flex-1 md:flex-none">
+                <i data-lucide="message-circle" class="w-4 h-4"></i> واتساب
             </button>
-            <button onclick="saveAndPrint()" class="flex items-center gap-2 px-3 py-2 bg-brand-secondary text-white rounded-lg hover:opacity-80 transition-colors shadow-lg text-sm">
-                <i data-lucide="printer" class="w-4 h-4"></i> طباعة/حفظ PDF
+            <button onclick="saveAndPrint()" class="flex items-center justify-center gap-1 px-3 py-2 bg-brand-secondary text-white rounded-lg hover:opacity-80 transition-colors shadow-md text-sm flex-1 md:flex-none">
+                <i data-lucide="printer" class="w-4 h-4"></i> طباعة/PDF
             </button>
         </div>
     </div>
 
-    <div id="voucher-paper" class="print-area a4-screen-size bg-white shadow-2xl relative overflow-hidden box-border transition-colors duration-300">
+    <div id="voucher-paper" class="print-area w-full max-w-4xl bg-white shadow-xl md:shadow-2xl relative overflow-hidden box-border transition-colors duration-300 rounded-lg md:rounded-none">
         
-        <div class="absolute top-0 left-0 right-0 h-3 bg-brand-primary transition-colors duration-300"></div>
-        <div class="absolute bottom-0 left-0 right-0 h-3 bg-brand-secondary transition-colors duration-300"></div>
+        <div class="absolute top-0 left-0 right-0 h-2 md:h-3 bg-brand-primary transition-colors duration-300"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-2 md:h-3 bg-brand-secondary transition-colors duration-300"></div>
 
-        <div class="px-10 py-12 flex flex-col h-full box-border">
+        <div class="px-4 py-8 sm:px-10 sm:py-12 print:px-10 print:py-12 flex flex-col h-full box-border">
             
-            <header class="flex justify-between items-center border-b-2 border-brand-primary pb-4 mb-6 mt-2 transition-colors duration-300">
-                <div class="text-right flex-1">
-                    <h1 id="company-name-ar" class="text-2xl md:text-3xl font-heading font-bold text-brand-secondary mb-1">شركة جوان الغربية</h1>
-                    <p id="company-sub-ar" class="text-brand-primary font-bold text-lg md:text-xl">لنقل المنتجات البترولية</p>
-                    <div class="mt-2 text-sm text-gray-500 flex items-center gap-1">
+            <header class="flex flex-col sm:flex-row print:flex-row justify-between items-center border-b-2 border-brand-primary pb-4 mb-6 mt-2 transition-colors duration-300 gap-4 sm:gap-0">
+                <div class="text-center sm:text-right print:text-right flex-1 order-2 sm:order-1 print:order-1">
+                    <h1 id="company-name-ar" class="text-xl sm:text-2xl print:text-3xl font-heading font-bold text-brand-secondary mb-1">شركة جوان الغربية</h1>
+                    <p id="company-sub-ar" class="text-brand-primary font-bold text-base sm:text-lg print:text-xl">لنقل المنتجات البترولية</p>
+                    <div class="mt-2 text-xs sm:text-sm text-gray-500 flex items-center justify-center sm:justify-start print:justify-start gap-1">
                         <span>س.ت / C.R:</span> 
-                        <span id="company-cr" class="font-bold text-gray-800 ml-1 text-base tracking-wider">4030457055</span>
+                        <span id="company-cr" class="font-bold text-gray-800 ml-1 text-sm sm:text-base tracking-wider">4030457055</span>
                     </div>
                 </div>
 
-                <div class="w-36 h-36 flex-shrink-0 mx-4 flex items-center justify-center">
-                    <img id="company-logo" src="jwan-logo.png" alt="شعار الشركة" class="max-w-full max-h-full object-contain" onerror="this.src='https://placehold.co/200x200/white/E30613?text=LOGO';">
+                <div class="w-24 h-24 sm:w-32 sm:h-32 print:w-36 print:h-36 flex-shrink-0 mx-2 sm:mx-4 flex items-center justify-center order-1 sm:order-2 print:order-2">
+                    <img id="company-logo" src="jwan-logo.png" alt="شعار الشركة" class="max-w-full max-h-full object-contain">
                 </div>
 
-                <div class="text-left flex-1" dir="ltr">
-                    <h1 id="company-name-en" class="text-xl md:text-2xl font-heading font-bold text-brand-secondary mb-1">Jwan Al Gharbia Co.</h1>
-                    <p id="company-sub-en" class="text-brand-primary font-bold text-md md:text-lg tracking-wider">For Petroleum Products Transport</p>
-                    <div class="mt-2 text-sm text-gray-500 flex items-center gap-1">
+                <div class="text-center sm:text-left print:text-left flex-1 order-3 sm:order-3 print:order-3" dir="ltr">
+                    <h1 id="company-name-en" class="text-lg sm:text-xl print:text-2xl font-heading font-bold text-brand-secondary mb-1">Jwan Al Gharbia Co.</h1>
+                    <p id="company-sub-en" class="text-brand-primary font-bold text-sm sm:text-md print:text-lg tracking-wider">For Petroleum Products Transport</p>
+                    <div class="mt-2 text-xs sm:text-sm text-gray-500 flex items-center justify-center sm:justify-start print:justify-start gap-1">
                         <span>VAT No:</span> 
-                        <span id="company-vat" class="font-bold text-gray-800 ml-1 text-base tracking-wider">302007788600003</span>
+                        <span id="company-vat" class="font-bold text-gray-800 ml-1 text-sm sm:text-base tracking-wider">302007788600003</span>
                     </div>
                 </div>
             </header>
 
-            <div class="flex flex-row justify-between items-end mb-8 gap-6">
-                <div class="flex flex-col gap-4 w-1/3">
+            <div class="flex flex-col sm:flex-row print:flex-row justify-between items-center sm:items-end print:items-end mb-8 gap-6">
+                
+                <div class="flex flex-col gap-4 w-full sm:w-1/3 print:w-1/3 order-2 sm:order-1 print:order-1">
                     <div class="flex items-center gap-2">
                         <span class="font-bold text-gray-700 whitespace-nowrap">الرقم:</span>
-                        <input type="text" id="voucher-number" class="dotted-line w-full text-lg font-bold text-brand-secondary px-2 py-1 outline-none text-center transition-colors duration-300">
+                        <input type="text" id="voucher-number" class="dotted-line w-full text-lg font-bold text-brand-secondary px-2 py-1 outline-none text-center sm:text-right print:text-center transition-colors duration-300">
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="font-bold text-gray-700 whitespace-nowrap">التاريخ:</span>
-                        <input type="date" id="current-date" class="dotted-line w-full text-lg px-2 py-1 text-gray-800 outline-none">
+                        <input type="date" id="current-date" class="dotted-line w-full text-base sm:text-lg px-2 py-1 text-gray-800 outline-none text-center sm:text-right print:text-center">
                     </div>
                 </div>
 
-                <div class="w-1/3 text-center">
-                    <div class="inline-block border-4 border-double border-brand-secondary px-6 py-2 rounded-xl bg-gray-50 transition-colors duration-300">
-                        <h2 id="voucher-title" class="text-3xl font-heading font-bold text-brand-secondary tracking-wider">سند قبض</h2>
-                        <h3 id="voucher-title-en" class="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Receipt Voucher</h3>
+                <div class="w-full sm:w-1/3 print:w-1/3 text-center order-1 sm:order-2 print:order-2">
+                    <div class="inline-block border-4 border-double border-brand-secondary px-4 sm:px-6 py-2 rounded-xl bg-gray-50 transition-colors duration-300">
+                        <h2 id="voucher-title" class="text-2xl sm:text-3xl font-heading font-bold text-brand-secondary tracking-wider">سند قبض</h2>
+                        <h3 id="voucher-title-en" class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Receipt Voucher</h3>
                     </div>
                 </div>
 
-                <div class="w-1/3 flex justify-end">
-                    <div class="border-2 border-brand-primary rounded-lg overflow-hidden flex shadow-sm transition-colors duration-300">
-                        <div class="bg-brand-primary text-white font-bold px-4 py-2 flex items-center justify-center text-lg transition-colors duration-300">
-                            ر.س
-                        </div>
-                        <input type="number" step="0.01" id="amount-number" class="w-40 text-2xl font-bold text-center p-2 focus:bg-gray-50 outline-none text-brand-secondary" placeholder="0.00" oninput="convertNumberToWords()">
+                <div class="w-full sm:w-1/3 print:w-1/3 flex justify-center sm:justify-end print:justify-end order-3 sm:order-3 print:order-3">
+                    <div class="border-2 border-brand-primary rounded-lg overflow-hidden flex shadow-sm transition-colors duration-300 w-full sm:w-auto">
+                        <div class="bg-brand-primary text-white font-bold px-3 sm:px-4 py-2 flex items-center justify-center text-base sm:text-lg transition-colors duration-300">ر.س</div>
+                        <input type="number" step="0.01" id="amount-number" class="w-full sm:w-40 text-xl sm:text-2xl font-bold text-center p-2 focus:bg-gray-50 outline-none text-brand-secondary" placeholder="0.00" oninput="convertNumberToWords()">
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-6 text-lg leading-relaxed flex-grow">
+            <div class="space-y-4 sm:space-y-6 text-base sm:text-lg leading-relaxed flex-grow">
                 
-                <div class="flex items-end gap-2 group">
+                <div class="flex flex-col sm:flex-row print:flex-row sm:items-end print:items-end gap-1 sm:gap-2">
                     <span id="target-label" class="font-bold text-gray-800 whitespace-nowrap">استلمنا من المكرم:</span>
-                    <input type="text" id="recipient-name" class="dotted-line flex-1 text-xl font-semibold px-2 pb-1 text-black outline-none" placeholder="اسم الشخص أو الشركة">
+                    <input type="text" id="recipient-name" class="dotted-line flex-1 text-lg sm:text-xl font-semibold px-2 pb-1 text-black outline-none w-full" placeholder="اسم الشخص أو الشركة">
                 </div>
 
-                <div class="flex items-end gap-2">
+                <div class="flex flex-col sm:flex-row print:flex-row sm:items-end print:items-end gap-1 sm:gap-2">
                     <span class="font-bold text-gray-800 whitespace-nowrap">مبلغ وقدره:</span>
-                    <div class="flex-1 flex gap-2 items-end">
-                        <input type="text" id="amount-words" class="dotted-line flex-1 font-bold text-brand-secondary px-2 pb-1 outline-none text-sm md:text-base" placeholder="المبلغ بالحروف">
-                        <span class="font-bold text-gray-800 whitespace-nowrap">فقط لا غير.</span>
+                    <div class="flex-1 flex gap-2 items-end w-full">
+                        <input type="text" id="amount-words" class="dotted-line flex-1 font-bold text-brand-secondary px-2 pb-1 outline-none text-sm sm:text-base w-full" placeholder="المبلغ بالحروف">
+                        <span class="font-bold text-gray-800 whitespace-nowrap hidden sm:inline print:inline">فقط لا غير.</span>
                     </div>
                 </div>
 
-                <div class="flex items-end gap-2">
+                <div class="flex flex-col sm:flex-row print:flex-row sm:items-end print:items-end gap-1 sm:gap-2">
                     <span class="font-bold text-gray-800 whitespace-nowrap">وذلك عن:</span>
-                    <input type="text" id="payment-reason" class="dotted-line flex-1 px-2 pb-1 text-black outline-none" placeholder="تفاصيل الخدمة أو المنتج">
+                    <input type="text" id="payment-reason" class="dotted-line flex-1 px-2 pb-1 text-black outline-none w-full" placeholder="تفاصيل الخدمة أو المنتج">
                 </div>
-                <div id="extra-notes" class="flex items-end gap-2 mt-2">
+                
+                <div class="flex flex-col sm:flex-row print:flex-row sm:items-end print:items-end gap-1 sm:gap-2 mt-2">
                     <input type="text" class="dotted-line w-full px-2 pb-1 text-black outline-none" placeholder="ملاحظات إضافية (اختياري)">
                 </div>
 
-                <div class="mt-8 p-4 border rounded-xl bg-gray-50 relative">
-                    <span class="absolute -top-3 right-5 bg-white px-2 font-bold text-sm text-gray-500">طريقة الدفع</span>
+                <div class="mt-6 sm:mt-8 p-3 sm:p-4 border rounded-xl bg-gray-50 relative">
+                    <span class="absolute -top-3 right-5 bg-white px-2 font-bold text-xs sm:text-sm text-gray-500">طريقة الدفع</span>
                     
-                    <div class="flex flex-wrap gap-6 items-center mb-3">
+                    <div class="flex flex-col sm:flex-row print:flex-row gap-3 sm:gap-6 sm:items-center print:items-center mb-3">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="payment_method" value="cash" class="w-5 h-5 accent-brand-primary" checked onchange="togglePaymentDetails()">
-                            <span class="font-bold">نقداً (Cash)</span>
+                            <span class="font-bold text-sm sm:text-base">نقداً (Cash)</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="payment_method" value="check" class="w-5 h-5 accent-brand-primary" onchange="togglePaymentDetails()">
-                            <span class="font-bold">شيك (Cheque)</span>
+                            <span class="font-bold text-sm sm:text-base">شيك (Cheque)</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="payment_method" value="transfer" class="w-5 h-5 accent-brand-primary" onchange="togglePaymentDetails()">
-                            <span class="font-bold">تحويل بنكي (Transfer)</span>
+                            <span class="font-bold text-sm sm:text-base">تحويل بنكي (Transfer)</span>
                         </label>
                     </div>
 
-                    <div id="payment-details" class="hidden gap-4 pt-3 border-t border-gray-200">
-                        <div class="flex-1 flex items-center gap-2">
-                            <span class="text-sm font-bold text-gray-600 whitespace-nowrap">رقم الشيك/الحوالة:</span>
+                    <div id="payment-details" class="hidden flex-col sm:flex-row print:flex-row gap-3 sm:gap-4 pt-3 border-t border-gray-200">
+                        <div class="flex-1 flex items-center gap-2 w-full">
+                            <span class="text-xs sm:text-sm font-bold text-gray-600 whitespace-nowrap">رقم الشيك/الحوالة:</span>
                             <input type="text" class="dotted-line flex-1 text-sm pb-1 bg-transparent outline-none">
                         </div>
-                        <div class="flex-1 flex items-center gap-2">
-                            <span class="text-sm font-bold text-gray-600 whitespace-nowrap">البنك:</span>
+                        <div class="flex-1 flex items-center gap-2 w-full">
+                            <span class="text-xs sm:text-sm font-bold text-gray-600 whitespace-nowrap">البنك:</span>
                             <input type="text" class="dotted-line flex-1 text-sm pb-1 bg-transparent outline-none">
                         </div>
-                        <div class="flex-1 flex items-center gap-2">
-                            <span class="text-sm font-bold text-gray-600 whitespace-nowrap">التاريخ:</span>
+                        <div class="flex-1 flex items-center gap-2 w-full">
+                            <span class="text-xs sm:text-sm font-bold text-gray-600 whitespace-nowrap">التاريخ:</span>
                             <input type="date" class="dotted-line flex-1 text-sm pb-1 bg-transparent outline-none">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 grid grid-cols-3 gap-8 text-center pb-4">
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 print:grid-cols-3 gap-6 sm:gap-8 text-center pb-4">
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2 border-b-2 border-transparent inline-block">المحاسب<br><span class="text-xs text-gray-500 font-normal">Accountant</span></h4>
-                    <div class="signature-box relative rounded-lg h-24 w-full overflow-hidden border">
+                    <div class="signature-box relative rounded-lg h-20 sm:h-24 w-full overflow-hidden border border-gray-300">
                         <canvas class="signature-pad w-full h-full cursor-crosshair touch-none"></canvas>
                         <button onclick="clearSignature(this)" class="clear-signature-btn no-print absolute top-1 right-1 bg-gray-200 text-gray-700 text-[10px] px-2 py-1 rounded hover:bg-brand-primary hover:text-white transition-colors">مسح</button>
                     </div>
                 </div>
                 <div>
                     <h4 class="font-bold text-gray-700 mb-2 border-b-2 border-transparent inline-block">المدير المالي<br><span class="text-xs text-gray-500 font-normal">Finance Manager</span></h4>
-                    <div class="signature-box relative rounded-lg h-24 w-full overflow-hidden border">
+                    <div class="signature-box relative rounded-lg h-20 sm:h-24 w-full overflow-hidden border border-gray-300">
                         <canvas class="signature-pad w-full h-full cursor-crosshair touch-none"></canvas>
                         <button onclick="clearSignature(this)" class="clear-signature-btn no-print absolute top-1 right-1 bg-gray-200 text-gray-700 text-[10px] px-2 py-1 rounded hover:bg-brand-primary hover:text-white transition-colors">مسح</button>
                     </div>
                 </div>
                 <div>
                     <h4 id="signature-target" class="font-bold text-gray-700 mb-2 border-b-2 border-transparent inline-block">المسلم<br><span class="text-xs text-gray-500 font-normal">Submitted By</span></h4>
-                    <div class="signature-box relative rounded-lg h-24 w-full overflow-hidden border">
+                    <div class="signature-box relative rounded-lg h-20 sm:h-24 w-full overflow-hidden border border-gray-300">
                         <canvas class="signature-pad w-full h-full cursor-crosshair touch-none"></canvas>
                         <button onclick="clearSignature(this)" class="clear-signature-btn no-print absolute top-1 right-1 bg-gray-200 text-gray-700 text-[10px] px-2 py-1 rounded hover:bg-brand-primary hover:text-white transition-colors">مسح</button>
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500 mt-auto">
+            <div class="pt-4 border-t border-gray-200 flex flex-col sm:flex-row print:flex-row justify-between items-center text-xs sm:text-sm text-gray-500 mt-auto gap-2">
                 <p>العنوان: المملكة العربية السعودية</p>
                 <div class="flex gap-4 items-center">
                     <span class="flex items-center gap-1"><i data-lucide="phone" class="w-3 h-3"></i> <input type="text" class="w-24 bg-transparent outline-none m-0 p-0 text-left" dir="ltr" placeholder="رقم الهاتف"></span>
@@ -299,7 +289,6 @@
     </div>
 
     <script>
-        // تسجيل الـ Service Worker (أساسي لتطبيق الآيفون)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
@@ -310,37 +299,23 @@
 
         const companyData = {
             jwan: {
-                nameAr: "شركة جوان الغربية",
-                subAr: "لنقل المنتجات البترولية",
-                cr: "4030457055",
-                nameEn: "Jwan Al Gharbia Co.",
-                subEn: "For Petroleum Products Transport",
-                vat: "302007788600003",
-                email: "info@juanalghrbia.com",
-                logo: "jwan-logo.png",
-                colorPrimary: "#E30613", 
-                colorSecondary: "#000000" 
+                nameAr: "شركة جوان الغربية", subAr: "لنقل المنتجات البترولية", cr: "4030457055",
+                nameEn: "Jwan Al Gharbia Co.", subEn: "For Petroleum Products Transport",
+                vat: "302007788600003", email: "info@juanalghrbia.com", logo: "jwan-logo.png",
+                colorPrimary: "#E30613", colorSecondary: "#000000" 
             },
             rehab: {
-                nameAr: "شركة رحاب الخيرات",
-                subAr: "التجارية",
-                cr: "4030184403",
-                nameEn: "REHAB AL-KHERAT",
-                subEn: "COMPANY",
-                vat: "311407532300003",
-                email: "info@rehabalkherat.com",
-                logo: "rehab-logo.jpg",
-                colorPrimary: "#BCAE94", 
-                colorSecondary: "#4A4643" 
+                nameAr: "شركة رحاب الخيرات", subAr: "التجارية", cr: "4030184403",
+                nameEn: "REHAB AL-KHERAT", subEn: "COMPANY",
+                vat: "311407532300003", email: "info@rehabalkherat.com", logo: "rehab-logo.jpg",
+                colorPrimary: "#BCAE94", colorSecondary: "#4A4643" 
             }
         };
 
         function switchCompany(compId) {
             const data = companyData[compId];
-
             document.documentElement.style.setProperty('--color-primary', data.colorPrimary);
             document.documentElement.style.setProperty('--color-secondary', data.colorSecondary);
-
             document.getElementById('company-name-ar').innerText = data.nameAr;
             document.getElementById('company-sub-ar').innerText = data.subAr;
             document.getElementById('company-cr').innerText = data.cr;
@@ -348,25 +323,15 @@
             document.getElementById('company-sub-en').innerText = data.subEn;
             document.getElementById('company-vat').innerText = data.vat;
             document.getElementById('company-email').innerText = data.email;
-            
             document.getElementById('company-logo').src = data.logo;
 
-            const btnJwan = document.getElementById('btn-comp-jwan');
-            const btnRehab = document.getElementById('btn-comp-rehab');
+            document.getElementById('btn-comp-jwan').className = compId === 'jwan' ? 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800' : 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200';
+            document.getElementById('btn-comp-rehab').className = compId === 'rehab' ? 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800' : 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200';
             
-            if (compId === 'jwan') {
-                btnJwan.className = 'px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800';
-                btnRehab.className = 'px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200';
-            } else {
-                btnRehab.className = 'px-4 py-2 rounded-md font-bold transition-all text-sm bg-white shadow text-gray-800';
-                btnJwan.className = 'px-4 py-2 rounded-md font-bold transition-all text-sm text-gray-500 hover:bg-gray-200';
-            }
-
             localStorage.setItem('selected_company', compId);
         }
 
         lucide.createIcons();
-
         document.getElementById('current-date').valueAsDate = new Date();
 
         function togglePaymentDetails() {
@@ -382,10 +347,7 @@
         }
 
         function initVoucherNumber() {
-            let lastNumber = localStorage.getItem('system_voucher_number');
-            if (!lastNumber) {
-                lastNumber = 1000; 
-            }
+            let lastNumber = localStorage.getItem('system_voucher_number') || 1000;
             document.getElementById('voucher-number').value = parseInt(lastNumber) + 1;
         }
 
@@ -407,10 +369,7 @@
                     const rect = canvas.getBoundingClientRect();
                     const clientX = e.clientX || (e.touches && e.touches[0].clientX);
                     const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                    return {
-                        x: clientX - rect.left,
-                        y: clientY - rect.top
-                    };
+                    return { x: clientX - rect.left, y: clientY - rect.top };
                 }
 
                 function startDrawing(e) {
@@ -433,16 +392,12 @@
                     e.preventDefault();
                 }
 
-                function stopDrawing() {
-                    isDrawing = false;
-                    ctx.beginPath();
-                }
+                function stopDrawing() { isDrawing = false; ctx.beginPath(); }
 
                 canvas.addEventListener('mousedown', startDrawing);
                 canvas.addEventListener('mousemove', draw);
                 canvas.addEventListener('mouseup', stopDrawing);
                 canvas.addEventListener('mouseout', stopDrawing);
-
                 canvas.addEventListener('touchstart', startDrawing, {passive: false});
                 canvas.addEventListener('touchmove', draw, {passive: false});
                 canvas.addEventListener('touchend', stopDrawing);
@@ -451,13 +406,11 @@
 
         window.clearSignature = function(btn) {
             const canvas = btn.previousElementSibling;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         };
 
         window.onload = function() {
-            const savedCompany = localStorage.getItem('selected_company') || 'jwan';
-            switchCompany(savedCompany);
+            switchCompany(localStorage.getItem('selected_company') || 'jwan');
             initVoucherNumber();
             initSignaturePads();
             togglePaymentDetails();
@@ -470,44 +423,23 @@
         }
 
         function setVoucherType(type) {
-            const btnReceipt = document.getElementById('btn-receipt');
-            const btnPayment = document.getElementById('btn-payment');
+            const isReceipt = type === 'receipt';
+            document.getElementById('btn-receipt').className = isReceipt ? 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all bg-brand-primary text-white shadow' : 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200';
+            document.getElementById('btn-payment').className = !isReceipt ? 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all bg-brand-secondary text-white shadow' : 'flex-1 md:flex-none px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200';
+            
             const title = document.getElementById('voucher-title');
-            const titleEn = document.getElementById('voucher-title-en');
-            const targetLabel = document.getElementById('target-label');
-            const sigTarget = document.getElementById('signature-target');
-
-            btnReceipt.className = 'px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200';
-            btnPayment.className = 'px-4 py-2 rounded-md font-bold transition-all text-gray-600 hover:bg-gray-200';
-
-            if (type === 'receipt') {
-                btnReceipt.className = 'px-4 py-2 rounded-md font-bold transition-all bg-brand-primary text-white shadow';
-                title.innerText = 'سند قبض';
-                title.style.color = 'var(--color-secondary)'; 
-                titleEn.innerText = 'Receipt Voucher';
-                targetLabel.innerText = 'استلمنا من المكرم:';
-                sigTarget.innerHTML = 'المسلم<br><span class="text-xs text-gray-500 font-normal">Submitted By</span>';
-            } else {
-                btnPayment.className = 'px-4 py-2 rounded-md font-bold transition-all bg-brand-secondary text-white shadow';
-                title.innerText = 'سند صرف';
-                title.style.color = 'var(--color-primary)'; 
-                titleEn.innerText = 'Payment Voucher';
-                targetLabel.innerText = 'صرفنا إلى المكرم:';
-                sigTarget.innerHTML = 'المستلم<br><span class="text-xs text-gray-500 font-normal">Received By</span>';
-            }
+            title.innerText = isReceipt ? 'سند قبض' : 'سند صرف';
+            title.style.color = isReceipt ? 'var(--color-secondary)' : 'var(--color-primary)'; 
+            document.getElementById('voucher-title-en').innerText = isReceipt ? 'Receipt Voucher' : 'Payment Voucher';
+            document.getElementById('target-label').innerText = isReceipt ? 'استلمنا من المكرم:' : 'صرفنا إلى المكرم:';
+            document.getElementById('signature-target').innerHTML = isReceipt ? 'المسلم<br><span class="text-xs text-gray-500 font-normal">Submitted By</span>' : 'المستلم<br><span class="text-xs text-gray-500 font-normal">Received By</span>';
         }
 
         function clearForm() {
             if(confirm('هل أنت متأكد من تفريغ جميع البيانات والتواقيع؟')) {
-                const inputs = document.querySelectorAll('input[type="text"]:not(#voucher-number), input[type="number"], input[type="date"]:not(#current-date)');
-                inputs.forEach(input => input.value = '');
+                document.querySelectorAll('input[type="text"]:not(#voucher-number), input[type="number"], input[type="date"]:not(#current-date)').forEach(i => i.value = '');
                 document.getElementById('current-date').valueAsDate = new Date();
-                
-                const canvases = document.querySelectorAll('.signature-pad');
-                canvases.forEach(canvas => {
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                });
+                document.querySelectorAll('.signature-pad').forEach(canvas => canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height));
             }
         }
 
@@ -523,21 +455,13 @@
                 let result = "";
                 let h = Math.floor(num / 100);
                 let rem = num % 100;
-                
                 if (h > 0) result += hundreds[h];
-                
                 if (rem > 0) {
                     if (result !== "") result += " و ";
-                    if (rem < 20) {
-                        result += units[rem];
-                    } else {
-                        let t = Math.floor(rem / 10);
-                        let u = rem % 10;
-                        if (u > 0) {
-                            result += units[u] + " و " + tens[t];
-                        } else {
-                            result += tens[t];
-                        }
+                    if (rem < 20) result += units[rem];
+                    else {
+                        let t = Math.floor(rem / 10), u = rem % 10;
+                        result += u > 0 ? units[u] + " و " + tens[t] : tens[t];
                     }
                 }
                 return result;
@@ -551,65 +475,29 @@
             }
 
             if (number === 0) return "صفر";
-
-            let strNumber = number.toFixed(2);
-            let parts = strNumber.split('.');
-            let intPart = parseInt(parts[0], 10);
-            let decPart = parseInt(parts[1], 10);
-
+            let parts = number.toFixed(2).split('.');
+            let intPart = parseInt(parts[0], 10), decPart = parseInt(parts[1], 10);
             if (intPart === 0 && decPart === 0) return "صفر";
 
             let text = "";
-            let b = Math.floor(intPart / 1000000000);
-            let intRem = intPart % 1000000000;
-            let m = Math.floor(intRem / 1000000);
-            intRem = intRem % 1000000;
-            let t = Math.floor(intRem / 1000);
-            let rem = intRem % 1000;
+            let b = Math.floor(intPart / 1000000000), intRem = intPart % 1000000000;
+            let m = Math.floor(intRem / 1000000); intRem = intRem % 1000000;
+            let t = Math.floor(intRem / 1000), rem = intRem % 1000;
 
-            if (b > 0) {
-                let gText = convertGroup(b);
-                text += (b === 1 || b === 2) ? getGroupName(b, billions) : gText + " " + getGroupName(b, billions);
-            }
-
-            if (m > 0) {
-                if (text !== "") text += " و ";
-                let gText = convertGroup(m);
-                text += (m === 1 || m === 2) ? getGroupName(m, millions) : gText + " " + getGroupName(m, millions);
-            }
-
-            if (t > 0) {
-                if (text !== "") text += " و ";
-                let gText = convertGroup(t);
-                text += (t === 1 || t === 2) ? getGroupName(t, thousands) : gText + " " + getGroupName(t, thousands);
-            }
-
-            if (rem > 0) {
-                if (text !== "") text += " و ";
-                text += convertGroup(rem);
-            }
+            if (b > 0) text += (b === 1 || b === 2) ? getGroupName(b, billions) : convertGroup(b) + " " + getGroupName(b, billions);
+            if (m > 0) { if (text !== "") text += " و "; text += (m === 1 || m === 2) ? getGroupName(m, millions) : convertGroup(m) + " " + getGroupName(m, millions); }
+            if (t > 0) { if (text !== "") text += " و "; text += (t === 1 || t === 2) ? getGroupName(t, thousands) : convertGroup(t) + " " + getGroupName(t, thousands); }
+            if (rem > 0) { if (text !== "") text += " و "; text += convertGroup(rem); }
 
             let finalText = text !== "" ? text + " ريال" : "";
-
-            if (decPart > 0) {
-                let decText = convertGroup(decPart);
-                if (finalText !== "") finalText += " و ";
-                finalText += decText + " هللة";
-            }
-
+            if (decPart > 0) { if (finalText !== "") finalText += " و "; finalText += convertGroup(decPart) + " هللة"; }
             return finalText;
         }
 
         function convertNumberToWords() {
             const numVal = document.getElementById('amount-number').value;
             const wordsInput = document.getElementById('amount-words');
-            
-            if (!numVal || numVal <= 0) {
-                wordsInput.value = '';
-                return;
-            }
-            
-            wordsInput.value = tafqeet(parseFloat(numVal));
+            wordsInput.value = (!numVal || numVal <= 0) ? '' : tafqeet(parseFloat(numVal));
         }
 
         function shareWhatsApp() {
@@ -628,21 +516,14 @@
             }
 
             let phone = prompt("أدخل رقم واتساب العميل (مع رمز الدولة، مثلاً 9665XXXXXXXX):", "966");
-            
             if(!phone) return;
-
             phone = phone.replace(/\D/g,'');
 
-            let message = `*${type} - ${currentCompany} ${currentCompanySub}*\n\n`;
-            message += `*رقم السند:* ${number}\n`;
-            message += `*التاريخ:* ${date}\n`;
-            message += `*الاسم:* ${name}\n`;
-            message += `*المبلغ:* ${amount} ريال\n`;
+            let message = `*${type} - ${currentCompany} ${currentCompanySub}*\n\n*رقم السند:* ${number}\n*التاريخ:* ${date}\n*الاسم:* ${name}\n*المبلغ:* ${amount} ريال\n`;
             if(reason) message += `*وذلك عن:* ${reason}\n\n`;
             message += `شكراً لتعاملكم معنا.`;
 
-            let url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
     </script>
 </body>
