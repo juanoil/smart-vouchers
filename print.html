@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>طباعة السند</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        heading: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* إعدادات ورقة A4 حرفية وصارمة */
+        body { 
+            background-color: #525659; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            font-family: 'Cairo', sans-serif; 
+        }
+        
+        .a4-paper { 
+            background: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            padding: 0; 
+            margin: 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+            position: relative; 
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .dotted-line { 
+            border-bottom: 2px dotted black; 
+            padding-bottom: 2px; 
+        }
+
+        .val-text { 
+            font-weight: bold; 
+            color: var(--color-sec); 
+            font-size: 1.1rem; 
+        }
+        
+        @media print {
+            body { 
+                background: white; 
+                padding: 0; 
+            }
+            .a4-paper { 
+                box-shadow: none; 
+                width: 210mm; 
+                height: 297mm; 
+                page-break-after: avoid; 
+            }
+            .no-print { 
+                display: none !important; 
+            }
+            * { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print fixed top-5 left-5 flex flex-col gap-3 z-50">
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-colors text-lg flex items-center justify-center gap-2">
+            🖨️ طباعة أو حفظ PDF
+        </button>
+        <button onclick="window.location.href='index.html'" class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-colors text-lg flex items-center justify-center gap-2">
+            ⬅️ العودة للتطبيق
+        </button>
+    </div>
+
+    <div class="a4-paper" id="paper-bg">
+        
+        <div id="top-bar" class="absolute top-0 left-0 right-0 h-4"></div>
+        <div id="bottom-bar" class="absolute bottom-0 left-0 right-0 h-4"></div>
+
+        <div class="px-12 py-16 flex flex-col h-full box-border">
+            
+            <header class="flex flex-row justify-between items-center border-b-[3px] pb-4 mb-8" id="header-border">
+                <div class="text-right flex-1">
+                    <h1 id="c-name-ar" class="text-3xl font-heading font-bold mb-1"></h1>
+                    <p id="c-sub-ar" class="font-bold text-xl"></p>
+                    <p class="text-sm text-gray-500 mt-2 font-bold">س.ت / C.R: <span id="c-cr" class="text-black ml-1 text-base tracking-wider"></span></p>
+                </div>
+                
+                <div class="w-36 h-36 mx-8 flex-shrink-0 flex items-center justify-center">
+                    <img id="c-logo" src="" class="max-w-full max-h-full object-contain">
+                </div>
+                
+                <div class="text-left flex-1" dir="ltr">
+                    <h1 id="c-name-en" class="text-2xl font-heading font-bold mb-1"></h1>
+                    <p id="c-sub-en" class="font-bold text-lg tracking-wider"></p>
+                    <p class="text-sm text-gray-500 mt-2 font-bold">VAT No: <span id="c-vat" class="text-black ml-1 text-base tracking-wider"></span></p>
+                </div>
+            </header>
+
+            <div class="flex flex-row justify-between items-end mb-10 gap-6">
+                <div class="w-1/3 flex flex-col gap-4">
+                    <div class="flex items-end gap-2 text-lg">
+                        <span class="font-bold text-gray-700 whitespace-nowrap">الرقم:</span>
+                        <div id="p-num" class="dotted-line flex-1 text-center val-text text-xl"></div>
+                    </div>
+                    <div class="flex items-end gap-2 text-lg">
+                        <span class="font-bold text-gray-700 whitespace-nowrap">التاريخ:</span>
+                        <div id="p-date" class="dotted-line flex-1 text-center font-bold text-gray-800 text-xl"></div>
+                    </div>
+                </div>
+                
+                <div class="w-1/3 text-center">
+                    <div id="title-box" class="inline-block border-[5px] border-double px-8 py-3 rounded-2xl bg-gray-50">
+                        <h2 id="p-title" class="text-3xl font-heading font-bold tracking-wider"></h2>
+                        <h3 id="p-title-en" class="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1"></h3>
+                    </div>
+                </div>
+                
+                <div class="w-1/3 flex justify-end">
+                    <div id="amt-box" class="border-2 rounded-xl overflow-hidden flex shadow-sm">
+                        <div id="amt-curr" class="text-white font-bold px-5 py-2 text-xl flex items-center justify-center">ر.س</div>
+                        <div id="p-amt" class="w-48 text-2xl font-bold text-center p-2 val-text flex items-center justify-center"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8 text-xl flex-grow">
+                
+                <div class="flex items-end gap-3 group">
+                    <span id="lbl-target" class="font-bold text-gray-800 whitespace-nowrap"></span>
+                    <div id="p-name" class="dotted-line flex-1 val-text px-2 text-2xl pb-1"></div>
+                </div>
+                
+                <div class="flex items-end gap-3">
+                    <span class="font-bold text-gray-800 whitespace-nowrap">مبلغ وقدره:</span>
+                    <div id="p-words" class="dotted-line flex-1 val-text px-2 pb-1"></div>
+                </div>
+                
+                <div class="flex items-end gap-3">
+                    <span class="font-bold text-gray-800 whitespace-nowrap">وذلك عن:</span>
+                    <div id="p-reason" class="dotted-line flex-1 font-bold text-gray-800 px-2 pb-1"></div>
+                </div>
+                
+                <div class="flex items-end gap-3 mt-2">
+                    <span class="font-bold text-gray-500 text-lg whitespace-nowrap">ملاحظات:</span>
+                    <div id="p-notes" class="dotted-line flex-1 text-lg text-gray-800 px-2 pb-1"></div>
+                </div>
+
+                <div class="mt-10 p-5 border-2 rounded-2xl bg-gray-50 relative">
+                    <span class="absolute -top-4 right-6 bg-white px-3 font-bold text-gray-500">طريقة الدفع</span>
+                    
+                    <div class="flex items-center gap-10 text-lg font-bold mb-2">
+                        <span id="pay-cash" class="text-gray-400">◻️ نقداً (Cash)</span>
+                        <span id="pay-check" class="text-gray-400">◻️ شيك (Cheque)</span>
+                        <span id="pay-trans" class="text-gray-400">◻️ تحويل (Transfer)</span>
+                    </div>
+                    
+                    <div id="pay-details-row" class="flex items-end gap-6 mt-6 hidden border-t-2 border-gray-200 pt-5">
+                        <div class="flex items-end gap-2 flex-1">
+                            <span class="text-gray-600 font-bold whitespace-nowrap">رقم الشيك/الحوالة:</span>
+                            <div id="p-pref" class="dotted-line flex-1 text-center font-bold text-lg pb-1"></div>
+                        </div>
+                        <div class="flex items-end gap-2 flex-1">
+                            <span class="text-gray-600 font-bold whitespace-nowrap">البنك:</span>
+                            <div id="p-pbank" class="dotted-line flex-1 text-center font-bold text-lg pb-1"></div>
+                        </div>
+                        <div class="flex items-end gap-2 flex-1">
+                            <span class="text-gray-600 font-bold whitespace-nowrap">التاريخ:</span>
+                            <div id="p-pdate" class="dotted-line flex-1 text-center font-bold text-lg pb-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 grid grid-cols-3 gap-10 text-center pb-8">
+                <div>
+                    <h4 class="font-bold text-xl mb-4 text-gray-700 border-b-2 border-transparent inline-block">
+                        المحاسب<br><span class="text-sm text-gray-500 font-normal">Accountant</span>
+                    </h4>
+                    <div class="h-28 border-2 border-gray-300 rounded-xl flex items-center justify-center overflow-hidden bg-white">
+                        <img id="sig-img-0" class="max-w-full max-h-full object-contain">
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xl mb-4 text-gray-700 border-b-2 border-transparent inline-block">
+                        المدير المالي<br><span class="text-sm text-gray-500 font-normal">Finance Manager</span>
+                    </h4>
+                    <div class="h-28 border-2 border-gray-300 rounded-xl flex items-center justify-center overflow-hidden bg-white">
+                        <img id="sig-img-1" class="max-w-full max-h-full object-contain">
+                    </div>
+                </div>
+                <div>
+                    <h4 id="lbl-sig" class="font-bold text-xl mb-4 text-gray-700 border-b-2 border-transparent inline-block">
+                    </h4>
+                    <div class="h-28 border-2 border-gray-300 rounded-xl flex items-center justify-center overflow-hidden bg-white">
+                        <img id="sig-img-2" class="max-w-full max-h-full object-contain">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t-2 border-gray-200 flex justify-between items-center text-gray-500 font-bold text-sm mt-auto">
+                <p>العنوان: المملكة العربية السعودية</p>
+                <div class="flex gap-8 items-center" dir="ltr">
+                    <span class="flex items-center gap-2">📞 <span id="p-phone" class="text-black font-bold tracking-wider"></span></span>
+                    <span class="flex items-center gap-2">✉️ <span id="c-email" class="text-black font-bold tracking-wider"></span></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const companies = {
+            jwan: { 
+                ar: "شركة جوان الغربية", sar: "لنقل المنتجات البترولية", cr: "4030457055", 
+                en: "Jwan Al Gharbia Co.", sen: "For Petroleum Products Transport", vat: "302007788600003", 
+                em: "info@juanalghrbia.com", log: "jwan-logo.png", cp: "#E30613", cs: "#000000" 
+            },
+            rehab: { 
+                ar: "شركة رحاب الخيرات", sar: "التجارية", cr: "4030184403", 
+                en: "REHAB AL-KHERAT", sen: "COMPANY", vat: "311407532300003", 
+                em: "info@rehabalkherat.com", log: "rehab-logo.jpg", cp: "#BCAE94", cs: "#4A4643" 
+            }
+        };
+
+        window.onload = () => {
+            // جلب البيانات من الذاكرة المحلية (التي حفظها تطبيق الجوال)
+            const compKey = localStorage.getItem('v_company') || 'jwan';
+            const comp = companies[compKey];
+            const type = localStorage.getItem('v_type') || 'receipt';
+            
+            // 1. تطبيق ألوان وهوية الشركة المختارة
+            document.documentElement.style.setProperty('--color-sec', comp.cs);
+            document.getElementById('top-bar').style.backgroundColor = comp.cp;
+            document.getElementById('bottom-bar').style.backgroundColor = comp.cs;
+            document.getElementById('header-border').style.borderColor = comp.cp;
+            document.getElementById('c-name-ar').style.color = comp.cs;
+            document.getElementById('c-sub-ar').style.color = comp.cp;
+            document.getElementById('c-name-en').style.color = comp.cs;
+            document.getElementById('c-sub-en').style.color = comp.cp;
+            document.getElementById('title-box').style.borderColor = comp.cs;
+            document.getElementById('p-title').style.color = comp.cs;
+            document.getElementById('amt-box').style.borderColor = comp.cp;
+            document.getElementById('amt-curr').style.backgroundColor = comp.cp;
+
+            // 2. تعبئة نصوص الشركة
+            document.getElementById('c-name-ar').innerText = comp.ar; 
+            document.getElementById('c-sub-ar').innerText = comp.sar;
+            document.getElementById('c-cr').innerText = comp.cr; 
+            document.getElementById('c-name-en').innerText = comp.en;
+            document.getElementById('c-sub-en').innerText = comp.sen; 
+            document.getElementById('c-vat').innerText = comp.vat;
+            document.getElementById('c-email').innerText = comp.em; 
+            document.getElementById('c-logo').src = comp.log;
+
+            // 3. تحديد نوع السند (قبض أو صرف)
+            const isRec = type === 'receipt';
+            document.getElementById('p-title').innerText = isRec ? 'سند قبض' : 'سند صرف';
+            document.getElementById('p-title-en').innerText = isRec ? 'Receipt Voucher' : 'Payment Voucher';
+            document.getElementById('lbl-target').innerText = isRec ? 'استلمنا من المكرم:' : 'صرفنا إلى المكرم:';
+            document.getElementById('lbl-sig').innerHTML = isRec ? 'المسلم<br><span class="text-sm text-gray-500 font-normal">Submitted By</span>' : 'المستلم<br><span class="text-sm text-gray-500 font-normal">Received By</span>';
+
+            // 4. تعبئة مدخلات السند
+            document.getElementById('p-num').innerText = localStorage.getItem('v_num') || '';
+            document.getElementById('p-date').innerText = localStorage.getItem('v_date') || '';
+            document.getElementById('p-amt').innerText = localStorage.getItem('v_amt') || '';
+            document.getElementById('p-words').innerText = localStorage.getItem('v_words') || '';
+            document.getElementById('p-name').innerText = localStorage.getItem('v_name') || '';
+            document.getElementById('p-reason').innerText = localStorage.getItem('v_reason') || '';
+            document.getElementById('p-notes').innerText = localStorage.getItem('v_notes') || '';
+            document.getElementById('p-phone').innerText = localStorage.getItem('v_phone') || '';
+
+            // 5. عرض طريقة الدفع
+            const payMethod = localStorage.getItem('v_paymethod') || 'cash';
+            if(payMethod === 'cash') document.getElementById('pay-cash').innerHTML = '☑️ <span class="text-black">نقداً (Cash)</span>';
+            if(payMethod === 'check') document.getElementById('pay-check').innerHTML = '☑️ <span class="text-black">شيك (Cheque)</span>';
+            if(payMethod === 'transfer') document.getElementById('pay-trans').innerHTML = '☑️ <span class="text-black">تحويل (Transfer)</span>';
+            
+            if(payMethod !== 'cash') {
+                document.getElementById('pay-details-row').classList.remove('hidden');
+                document.getElementById('p-pref').innerText = localStorage.getItem('v_payref') || '';
+                document.getElementById('p-pbank').innerText = localStorage.getItem('v_paybank') || '';
+                document.getElementById('p-pdate').innerText = localStorage.getItem('v_paydate') || '';
+            }
+
+            // 6. رسم التواقيع المحفوظة كصور
+            document.getElementById('sig-img-0').src = localStorage.getItem('v_sig0') || '';
+            document.getElementById('sig-img-1').src = localStorage.getItem('v_sig1') || '';
+            document.getElementById('sig-img-2').src = localStorage.getItem('v_sig2') || '';
+
+            // 7. فتح نافذة الطباعة تلقائياً بعد جزء من الثانية (لضمان تحميل الصور والخطوط بالكامل)
+            setTimeout(() => {
+                window.print();
+            }, 800);
+        };
+    </script>
+</body>
+</html>
